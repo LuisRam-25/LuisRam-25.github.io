@@ -221,11 +221,14 @@ function loadModels() {
   const Position4 = new THREE.Vector3( -30 ,0, 60 );
   loader.load( 'models/spy/p.glb', gltf => onLoad( gltf, Position4, Standard), onProgress, onError );
 
-  const Position5 = new THREE.Vector3( 0.8 ,-2, -3);
+  const Position5 = new THREE.Vector3( 0.9 ,-2, -3);
   loader.load( 'models/spy/c2.glb', gltf => onLoad( gltf, Position5, refractorySkybox), onProgress, onError );
 
-  const Position6 = new THREE.Vector3( -0.3,  -2, -2);
+  const Position6 = new THREE.Vector3( -0.9,  -2, -2);
   loader.load( 'models/spy/c3.glb', gltf => onLoad( gltf, Position6, refractorySkybox), onProgress, onError );
+
+  const Position7 = new THREE.Vector3( 0, -2, -4 );
+  loader.load( 'models/spy/camera4.glb', gltf => onLoad( gltf, Position7, refractorySkybox), onProgress, onError );
   //const storkPosition = new THREE.Vector3( 0, -2.5, -10 );
   //loader.load( 'models/Stork.glb', gltf => onLoad( gltf, storkPosition ), onProgress, onError );
 
