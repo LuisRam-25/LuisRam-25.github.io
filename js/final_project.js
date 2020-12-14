@@ -4,6 +4,11 @@ let camera;
 let controls;
 let renderer;
 let scene;
+let object;
+let mesh;
+let mesh2;
+
+
 
 //add material name here first
 let newMaterial, Standard, newStandard, pointsMaterial;
@@ -28,12 +33,24 @@ function init() {
   loadModels();
   createRenderer();
 
+
+
   renderer.setAnimationLoop( () => {
 
     update();
     render();
 
   } );
+
+  var geometry = new THREE.BoxBufferGeometry( 9, 9, 9 );
+  mesh = new THREE.Mesh( geometry, newStandard);
+  scene.add( mesh );
+	mesh.position.set(0, 1.5, 10);
+
+  var geometry2 = new THREE.BoxBufferGeometry( 9, 9, 9 );
+  mesh2 = new THREE.Mesh( geometry2, newStandard2);
+  scene.add( mesh2 );
+	mesh2.position.set(0, 15.5, 10);
 
 }
 
@@ -96,9 +113,14 @@ function createLights() {
 function createMaterials(){
 
      let diffuseColor = "#9E4300";
-     newMaterial = new THREE.MeshBasicMaterial( { color: "#9E4300", skinning: true} );
+     newMaterial = new THREE.MeshBasicMaterial( { color: "#16f048", skinning: true} );
 
-     Standard = new THREE.MeshStandardMaterial( { color: "#9E4300", skinning: true} );
+     Standard = new THREE.MeshStandardMaterial( {
+       color: "#9E4300", skinning: true,
+       metalness: 0.1,
+       shininess: 100
+
+     } );
 
      const loadTexture = new THREE.TextureLoader();
      const texture = loadTexture.load("textures/SupernumeraryRainbows_Entwistle_1362.jpg");
@@ -109,9 +131,13 @@ function createMaterials(){
        // reduce blurring at glancing angles
        texture.anisotropy = 16;
 
-     const imgTexture = new THREE.TextureLoader().load( "textures/water.JPG" );
+     const imgTexture = new THREE.TextureLoader().load( "textures/q.jpg" );
      				imgTexture.wrapS = imgTexture.wrapT = THREE.RepeatWrapping;
-     				imgTexture.anisotropy = 16;
+     				imgTexture.anisotropy = 29;
+
+    const imgTexture2 = new THREE.TextureLoader().load( "textures/q2.jpg" );
+          imgTexture2.wrapS = imgTexture2.wrapT = THREE.RepeatWrapping;
+          imgTexture2.anisotropy = 29;
 
 
    SkyboxMaterial = new THREE.MeshBasicMaterial( { color: 0xffffff, envMap: scene.background } );
@@ -129,11 +155,21 @@ function createMaterials(){
                     //displacementScale: 1,
                     refractionRatio: 0.98,
                     reflectivity: 0.9,
-                    specular: 0x222222,
+                    specular: 0x000000,
 					          //shininess: 100,
                     skinning: true
 									} );
 
+    newStandard2 = new THREE.MeshPhongMaterial( {
+                  map: imgTexture2,
+                  metalness: 0.5,
+                  roughness: 0.1,
+                  envMap: SkyboxTexture,
+                  refractionRatio: 0.98,
+                  reflectivity: 0.9,
+                  specular: 0x000000,
+                  skinning: true
+                                 } );
 
 
    refractorySkybox = new THREE.MeshPhongMaterial( {
@@ -177,7 +213,7 @@ function loadModels() {
     //const model = gltf.scene.children[ 0 ];
     //model.position.copy( position );
 
-  /* const animation = gltf.animations[ 0 ];
+  /*const animation = gltf.animations[ 0 ];
 
     const mixer = new THREE.AnimationMixer( model );
     mixers.push( mixer );
@@ -199,6 +235,8 @@ function loadModels() {
                  });
                    scene.add(object);
 
+
+
     //scene.add(object );
 
   };
@@ -215,11 +253,12 @@ function loadModels() {
   const Position2 = new THREE.Vector3( 0, -2, -2 );
   loader.load( 'models/spy/c.glb', gltf => onLoad( gltf, Position2, refractorySkybox), onProgress, onError );
 
+
   const Position3 = new THREE.Vector3( 0, -50, 0 );
   loader.load( 'models/spy/m.glb', gltf => onLoad( gltf, Position3, Standard), onProgress, onError );
 
   const Position4 = new THREE.Vector3( -30 ,0, 60 );
-  loader.load( 'models/spy/p.glb', gltf => onLoad( gltf, Position4, Standard), onProgress, onError );
+  loader.load( 'models/spy/p.glb', gltf => onLoad( gltf, Position4, newMaterial), onProgress, onError );
 
   const Position5 = new THREE.Vector3( 0.9 ,-2, -3);
   loader.load( 'models/spy/c2.glb', gltf => onLoad( gltf, Position5, refractorySkybox), onProgress, onError );
@@ -233,6 +272,18 @@ function loadModels() {
   //loader.load( 'models/Stork.glb', gltf => onLoad( gltf, storkPosition ), onProgress, onError );
 
 }
+//
+// var interface = new function(){
+// this.rotationX= 0.01;
+// this.rotationY= 0.01;
+// this.rotationZ= 0.01;
+// }
+//
+// var datGUI = new dat.GUI();
+// datGUI.add(interface, 'rotationX', 0, 1);
+// datGUI.add(interface, 'rotationY', 0, 1);
+// datGUI.add(interface, 'rotationZ', 0, 1);
+
 
 function createRenderer() {
 
@@ -272,6 +323,30 @@ function render() {
 
 }
 
+function animate() {
+
+  // call animate recursively
+  requestAnimationFrame( animate );
+
+  mesh.rotation.y += 0.15;
+  mesh2.rotation.x += 0.15;
+
+
+  // render, or 'create a still image', of the scene
+  // this will create one still image / frame each time the animate
+  // function calls itself
+  renderer.render( scene, camera );
+
+}
+
+function onMouseMove( event ) {
+  // calculate mouse position in normalized device coordinates
+  // (-1 to +1) for both components
+  mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+  mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+}
+
+
 function onWindowResize() {
 
   camera.aspect = container.clientWidth / container.clientHeight;
@@ -286,3 +361,5 @@ function onWindowResize() {
 window.addEventListener( 'resize', onWindowResize );
 
 init();
+
+animate();
