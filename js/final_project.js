@@ -272,13 +272,12 @@ function loadModels() {
   //loader.load( 'models/Stork.glb', gltf => onLoad( gltf, storkPosition ), onProgress, onError );
 
 }
-//
 // var interface = new function(){
 // this.rotationX= 0.01;
 // this.rotationY= 0.01;
 // this.rotationZ= 0.01;
 // }
-//
+// //
 // var datGUI = new dat.GUI();
 // datGUI.add(interface, 'rotationX', 0, 1);
 // datGUI.add(interface, 'rotationY', 0, 1);
